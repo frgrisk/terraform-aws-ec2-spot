@@ -67,6 +67,7 @@ resource "aws_spot_instance_request" "instance" {
 
   root_block_device {
     volume_type = "gp3"
+    encrypted   = var.encrypt_volumes
   }
 
   dynamic "ebs_block_device" {
@@ -75,6 +76,7 @@ resource "aws_spot_instance_request" "instance" {
       device_name = ebs_block_device.value["name"]
       volume_type = ebs_block_device.value["type"]
       volume_size = ebs_block_device.value["size"]
+      encrypted   = var.encrypt_volumes
     }
   }
 
@@ -112,6 +114,7 @@ resource "aws_ebs_volume" "raid_array" {
   count             = var.raid_array_size > 0 ? 10 : 0
   availability_zone = data.aws_subnet.instance.availability_zone
   size              = var.raid_array_size / 10
+  encrypted         = var.encrypt_volumes
   type              = "gp3"
   tags = {
     Name = "${local.tag_name} Raid Array Disk ${count.index}"

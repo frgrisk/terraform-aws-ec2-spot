@@ -77,3 +77,9 @@ variable "user_data_replace_on_change" {
   type        = bool
   default     = true
 }
+
+variable "encrypt_volumes" {
+  description = "Flag to enable encryption of volumes"
+  type        = bool
+  default     = true
+}
