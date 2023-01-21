@@ -73,6 +73,10 @@ resource "aws_spot_instance_request" "instance" {
     volume_type = "gp3"
     volume_size = var.root_volume_size
     encrypted   = var.encrypt_volumes
+    tags = {
+      Name        = "${local.tag_name} root volume"
+      Environment = var.tag_environment
+    }
   }
 
   dynamic "ebs_block_device" {
@@ -82,6 +86,10 @@ resource "aws_spot_instance_request" "instance" {
       volume_type = ebs_block_device.value["type"]
       volume_size = ebs_block_device.value["size"]
       encrypted   = var.encrypt_volumes
+      tags = {
+        Name        = "${local.tag_name} ${ebs_block_device.value["name"]}"
+        Environment = var.tag_environment
+      }
     }
   }
 
