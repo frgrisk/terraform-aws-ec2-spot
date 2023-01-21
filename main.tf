@@ -71,6 +71,7 @@ resource "aws_spot_instance_request" "instance" {
 
   root_block_device {
     volume_type = "gp3"
+    volume_size = var.root_volume_size
     encrypted   = var.encrypt_volumes
   }
 
