@@ -9,9 +9,10 @@ variable "tag_name" {
   default     = ""
 }
 
-variable "placement_group_name" {
+variable "placement_group" {
   description = "The name of the placement group to place the instance in"
   type        = string
+  default     = null
 }
 
 variable "subnet_id" {

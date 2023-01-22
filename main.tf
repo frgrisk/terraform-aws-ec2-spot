@@ -22,7 +22,7 @@ locals {
 
 resource "aws_spot_instance_request" "instance" {
 
-  placement_group = var.placement_group_name
+  placement_group = var.placement_group
 
   tags = {
     Name                = local.tag_name
