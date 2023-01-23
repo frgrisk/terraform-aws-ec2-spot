@@ -124,6 +124,9 @@ resource "aws_ebs_volume" "raid_array" {
   tags = {
     Name = "${local.tag_name} Raid Array Disk ${count.index}"
   }
+  lifecycle {
+    replace_triggered_by = [aws_spot_instance_request.instance.spot_instance_id]
+  }
 }
 
 resource "aws_volume_attachment" "raid_array" {
