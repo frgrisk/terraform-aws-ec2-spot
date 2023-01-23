@@ -9,6 +9,12 @@ variable "tag_name" {
   default     = ""
 }
 
+variable "additional_tags" {
+  description = "Additional tags to apply to the instance"
+  type        = map(string)
+  default     = {}
+}
+
 variable "placement_group" {
   description = "The name of the placement group to place the instance in"
   type        = string
