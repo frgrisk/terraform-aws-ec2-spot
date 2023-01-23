@@ -18,22 +18,24 @@ locals {
     file("${path.module}/user_data_scripts/reboot.sh")
     ]
   )
+
+  instance_tags = merge(
+    var.additional_tags,
+    {
+      Name        = local.tag_name
+      Environment = var.tag_environment
+      Hostname    = var.hostname
+    },
+  )
 }
 
 resource "aws_spot_instance_request" "instance" {
 
   placement_group = var.placement_group
 
-  tags = {
-    Name                = local.tag_name
-    Environment         = var.tag_environment
-    DashboardManageable = "true"
-  }
+  tags = local.instance_tags
 
-  volume_tags = {
-    Name        = local.tag_name
-    Environment = var.tag_environment
-  }
+  volume_tags = local.instance_tags
 
   wait_for_fulfillment = true
 
@@ -87,28 +89,12 @@ resource "aws_spot_instance_request" "instance" {
 
 }
 
-resource "aws_ec2_tag" "name" {
-  resource_id = aws_spot_instance_request.instance.spot_instance_id
-  key         = "Name"
-  value       = local.tag_name
-}
+resource "aws_ec2_tag" "instance" {
+  for_each = local.instance_tags
 
-resource "aws_ec2_tag" "environment" {
   resource_id = aws_spot_instance_request.instance.spot_instance_id
-  key         = "Environment"
-  value       = var.tag_environment
-}
-
-resource "aws_ec2_tag" "hostname" {
-  resource_id = aws_spot_instance_request.instance.spot_instance_id
-  key         = "Hostname"
-  value       = var.hostname
-}
-
-resource "aws_ec2_tag" "dashboard_manageable" {
-  resource_id = aws_spot_instance_request.instance.spot_instance_id
-  key         = "DashboardManageable"
-  value       = "true"
+  key         = each.key
+  value       = each.value
 }
 
 data "aws_subnet" "instance" {
