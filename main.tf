@@ -107,9 +107,6 @@ resource "aws_ebs_volume" "raid_array" {
   size              = var.raid_array_size / 10
   encrypted         = var.encrypt_volumes
   type              = "gp3"
-  tags = {
-    Name = "${local.tag_name} Raid Array Disk ${count.index}"
-  }
   lifecycle {
     replace_triggered_by = [aws_spot_instance_request.instance.spot_instance_id]
   }
