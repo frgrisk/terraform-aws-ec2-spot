@@ -20,12 +20,12 @@ locals {
   )
 
   instance_tags = merge(
-    var.additional_tags,
     {
       Name        = local.tag_name
       Environment = var.tag_environment
       Hostname    = var.hostname
     },
+    var.additional_tags,
   )
 }
 
