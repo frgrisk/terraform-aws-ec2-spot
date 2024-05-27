@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~>5.0"
+    }
+  }
+}
+
 locals {
   tag_name = coalesce(var.tag_name, var.hostname)
 
