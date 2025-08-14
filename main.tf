@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~>5.0"
+      version = "~>6.0"
     }
   }
 }
@@ -39,6 +39,7 @@ locals {
 }
 
 resource "aws_spot_instance_request" "instance" {
+  region = var.region
 
   placement_group = var.placement_group
 
@@ -99,6 +100,7 @@ resource "aws_spot_instance_request" "instance" {
 }
 
 resource "aws_ec2_tag" "instance" {
+  region   = var.region
   for_each = local.instance_tags
 
   resource_id = aws_spot_instance_request.instance.spot_instance_id
@@ -107,10 +109,12 @@ resource "aws_ec2_tag" "instance" {
 }
 
 data "aws_subnet" "instance" {
-  id = var.subnet_id
+  region = var.region
+  id     = var.subnet_id
 }
 
 resource "aws_ebs_volume" "raid_array" {
+  region            = var.region
   count             = var.raid_array_size > 0 ? 10 : 0
   availability_zone = data.aws_subnet.instance.availability_zone
   size              = var.raid_array_size / 10
@@ -122,6 +126,7 @@ resource "aws_ebs_volume" "raid_array" {
 }
 
 resource "aws_volume_attachment" "raid_array" {
+  region      = var.region
   count       = length(aws_ebs_volume.raid_array.*.id)
   volume_id   = aws_ebs_volume.raid_array[count.index].id
   instance_id = aws_spot_instance_request.instance.spot_instance_id
