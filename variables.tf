@@ -90,3 +90,9 @@ variable "encrypt_volumes" {
   type        = bool
   default     = true
 }
+
+variable "region" {
+  description = "The AWS region to deploy the instance in"
+  type        = string
+  default     = null
+}
